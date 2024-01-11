@@ -1,0 +1,48 @@
+Certainly! Installing Jira using Docker is a convenient way to set up and manage Jira instances. Here are the basic steps to install Jira using Docker:
+
+    Install Docker:
+    Make sure Docker is installed on your machine. You can download and install Docker from the official website: Docker.
+
+    Create a Docker Network:
+    Create a Docker network to allow containers to communicate with each other.
+
+bash
+
+docker network create jira-network
+
+Run the PostgreSQL Database Container:
+Jira requires a database to store its data. PostgreSQL is a recommended database for Jira. You can run a PostgreSQL container with the following command:
+
+bash
+
+docker run --name jira-postgres \
+  --network=jira-network \
+  -e POSTGRES_USER=jirauser \
+  -e POSTGRES_PASSWORD=jirapassword \
+  -e POSTGRES_DB=jiradb \
+  -d postgres:13
+
+Replace jirauser, jirapassword, and jiradb with your desired PostgreSQL username, password, and database name.
+
+Run the Jira Container:
+Run the Jira container, linking it to the PostgreSQL container:
+
+bash
+
+    docker run --name jira \
+      --network=jira-network \
+      -p 8080:8080 \
+      -e ATL_JDBC_URL=jdbc:postgresql://jira-postgres:5432/jiradb \
+      -e ATL_JDBC_USER=jirauser \
+      -e ATL_JDBC_PASSWORD=jirapassword \
+      -d atlassian/jira-software
+
+    This command pulls the latest Jira Software Docker image from the Atlassian Docker Hub repository and runs it.
+
+    Access Jira:
+    Once the containers are up and running, you can access Jira by navigating to http://localhost:8080 in your web browser. Follow the on-screen instructions to complete the Jira setup process.
+
+    Configure Jira:
+    During the setup process, you'll need to provide a license key for Jira. If you don't have one yet, you can choose to use the trial license. Follow the prompts to configure your Jira instance.
+
+That's it! You now have Jira running in a Docker container. Keep in mind that these are basic instructions, and you may need to customize them based on your specific requirements. Additionally, make sure to check for the latest version of Jira and adjust the Docker image tag accordingly.
